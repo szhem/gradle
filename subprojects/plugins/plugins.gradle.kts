@@ -85,6 +85,7 @@ dependencies {
         because("for unknown reason (bug in the Groovy/Spock compiler?) requires it to be present to use the Gradle Module Metadata test fixtures")
     }
     integTestRuntimeOnly(project(":testingJunitPlatform"))
+    integTestImplementation(testFixtures(project(":core")))
 }
 
 
