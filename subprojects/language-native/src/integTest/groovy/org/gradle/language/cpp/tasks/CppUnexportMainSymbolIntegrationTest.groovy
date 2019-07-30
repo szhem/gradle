@@ -40,7 +40,7 @@ class CppUnexportMainSymbolIntegrationTest extends AbstractUnexportMainSymbolInt
         file("src/main/cpp/main.cpp") << """
             #include <iostream>
             
-            int wmain( int argc**, wchar_t *argv[], wchar_t *envp[] ) {
+            int wmain(int argc, wchar_t *argv[], wchar_t *envp[] ) {
                 std::cout << "hello world!" << std::endl;
                 return 0;
             }
@@ -49,7 +49,7 @@ class CppUnexportMainSymbolIntegrationTest extends AbstractUnexportMainSymbolInt
         when:
         succeeds("unexport")
         then:
-        assertMainSymbolIsNotExported("build/relocated/main.o")
+        assertMainSymbolIsNotExported(objectFile("build/relocated/main"))
     }
 
     @Override
