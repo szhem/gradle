@@ -237,13 +237,14 @@ public interface JavaForkOptions extends ProcessForkOptions {
 
     /**
      * Returns the Java Debug Wire Protocol properties for the process. If enabled then the {@code -agentlib:jdwp=...}
-     * will be appended to the JVM arguments with the configuration from the parameter.
-     *
+     * will be appended to the JVx
      * @since 5.6
      */
     @Nested
     @Incubating
-    JavaDebugOptions getDebugOptions();
+    default JavaDebugOptions getDebugOptions() {
+        return null;
+    }
 
     /**
      * Configures Java Debug Wire Protocol properties for the process. If {@link #setDebug(boolean)} is enabled then
@@ -253,7 +254,9 @@ public interface JavaForkOptions extends ProcessForkOptions {
      * @since 5.6
      */
     @Incubating
-    void debugOptions(Action<JavaDebugOptions> action);
+    default void debugOptions(Action<JavaDebugOptions> action) {
+        // do nothing
+    }
 
     /**
      * Returns the full set of arguments to use to launch the JVM for the process. This includes arguments to define
