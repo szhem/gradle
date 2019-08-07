@@ -131,7 +131,7 @@ public class DefaultObjectFactory implements ObjectFactory {
 
         if (valueType.isPrimitive()) {
             // Kotlin passes these types for its own basic types
-            return Cast.uncheckedCast(property(JavaReflectionUtil.getWrapperTypeForPrimitiveType(valueType)));
+            return Cast.uncheckedNonnullCast(property(JavaReflectionUtil.getWrapperTypeForPrimitiveType(valueType)));
         }
         if (List.class.isAssignableFrom(valueType)) {
             DeprecationLogger.nagUserOfReplacedMethodInvocation("ObjectFactory.property() to create a property of type List<T>", "ObjectFactory.listProperty()");
@@ -145,37 +145,37 @@ public class DefaultObjectFactory implements ObjectFactory {
             DeprecationLogger.nagUserOfReplacedMethodInvocation("ObjectFactory.property() method to create a property of type RegularFile", "ObjectFactory.fileProperty()");
         }
 
-        return new DefaultProperty<T>(valueType);
+        return new DefaultProperty<>(valueType);
     }
 
     @Override
     public <T> ListProperty<T> listProperty(Class<T> elementType) {
         if (elementType.isPrimitive()) {
             // Kotlin passes these types for its own basic types
-            return Cast.uncheckedCast(listProperty(JavaReflectionUtil.getWrapperTypeForPrimitiveType(elementType)));
+            return Cast.uncheckedNonnullCast(listProperty(JavaReflectionUtil.getWrapperTypeForPrimitiveType(elementType)));
         }
-        return new DefaultListProperty<T>(elementType);
+        return new DefaultListProperty<>(elementType);
     }
 
     @Override
     public <T> SetProperty<T> setProperty(Class<T> elementType) {
         if (elementType.isPrimitive()) {
             // Kotlin passes these types for its own basic types
-            return Cast.uncheckedCast(setProperty(JavaReflectionUtil.getWrapperTypeForPrimitiveType(elementType)));
+            return Cast.uncheckedNonnullCast(setProperty(JavaReflectionUtil.getWrapperTypeForPrimitiveType(elementType)));
         }
-        return new DefaultSetProperty<T>(elementType);
+        return new DefaultSetProperty<>(elementType);
     }
 
     @Override
     public <K, V> MapProperty<K, V> mapProperty(Class<K> keyType, Class<V> valueType) {
         if (keyType.isPrimitive()) {
             // Kotlin passes these types for its own basic types
-            return Cast.uncheckedCast(mapProperty(JavaReflectionUtil.getWrapperTypeForPrimitiveType(keyType), valueType));
+            return Cast.uncheckedNonnullCast(mapProperty(JavaReflectionUtil.getWrapperTypeForPrimitiveType(keyType), valueType));
         }
         if (valueType.isPrimitive()) {
             // Kotlin passes these types for its own basic types
-            return Cast.uncheckedCast(mapProperty(keyType, JavaReflectionUtil.getWrapperTypeForPrimitiveType(valueType)));
+            return Cast.uncheckedNonnullCast(mapProperty(keyType, JavaReflectionUtil.getWrapperTypeForPrimitiveType(valueType)));
         }
-        return new DefaultMapProperty<K, V>(keyType, valueType);
+        return new DefaultMapProperty<>(keyType, valueType);
     }
 }
