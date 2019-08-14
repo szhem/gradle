@@ -2,6 +2,10 @@ buildscript {
     repositories {
         jcenter()
         google()
+        maven {
+            name = "kotlin-eap"
+            url = uri("https://dl.bintray.com/kotlin/kotlin-eap")
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:$androidPluginVersion'
@@ -15,6 +19,10 @@ System.properties['com.android.build.gradle.overrideVersionCheck'] = 'true'
 repositories {
     jcenter()
     google()
+    maven {
+        name = "kotlin-eap"
+        url = uri("https://dl.bintray.com/kotlin/kotlin-eap")
+    }
 }
 
 apply plugin: 'com.android.application'
@@ -103,7 +111,7 @@ project.afterEvaluate {
 }
 
 dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.0.3'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation 'org.jetbrains.anko:anko-common:0.9'
 
     testImplementation 'junit:junit:4.12'

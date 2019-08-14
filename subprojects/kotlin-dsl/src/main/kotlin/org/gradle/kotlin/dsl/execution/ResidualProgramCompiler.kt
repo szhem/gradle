@@ -66,7 +66,7 @@ import org.gradle.plugin.management.internal.DefaultPluginRequests
 
 import org.gradle.plugin.use.internal.PluginRequestCollector
 
-import org.jetbrains.kotlin.scripting.definitions.KotlinScriptDefinition
+import org.jetbrains.kotlin.scripting.definitions.ScriptDefinition
 
 import org.jetbrains.org.objectweb.asm.ClassVisitor
 import org.jetbrains.org.objectweb.asm.ClassWriter
@@ -83,6 +83,10 @@ import kotlin.script.dependencies.Environment
 import kotlin.script.dependencies.ScriptContents
 import kotlin.script.experimental.dependencies.DependenciesResolver
 import kotlin.script.experimental.dependencies.ScriptDependencies
+import kotlin.script.experimental.host.ScriptingHostConfiguration
+import kotlin.script.experimental.host.getScriptingClass
+import kotlin.script.experimental.jvm.JvmGetScriptingClass
+import kotlin.script.experimental.jvm.defaultJvmScriptingHostConfiguration
 
 
 internal
@@ -166,7 +170,7 @@ class ResidualProgramCompiler(
 
     private
     fun mightBeLargerThan64KB(secondStageScriptText: String) =
-        // We use a simple heuristic to avoid converting the string to bytes
+    // We use a simple heuristic to avoid converting the string to bytes
         // if all code points were in UTF32, 16K code points would require 64K bytes
         secondStageScriptText.length >= 16 * 1024
 
@@ -588,7 +592,7 @@ class ResidualProgramCompiler(
     private
     fun compileStage1(
         source: ProgramSource,
-        scriptDefinition: KotlinScriptDefinition,
+        scriptDefinition: ScriptDefinition,
         compileClassPath: ClassPath = classPath
     ): InternalName =
         withTemporaryScriptFileFor(source.path, source.text) { scriptFile ->
@@ -606,7 +610,7 @@ class ResidualProgramCompiler(
     fun compileScript(
         scriptFile: File,
         originalPath: String,
-        scriptDefinition: KotlinScriptDefinition,
+        scriptDefinition: ScriptDefinition,
         stage: String,
         compileClassPath: ClassPath = classPath
     ) = InternalName.from(
@@ -674,21 +678,9 @@ class ResidualProgramCompiler(
 }
 
 
-fun scriptDefinitionFromTemplate(
-    template: KClass<out Any>,
-    implicitImports: List<String>
-): KotlinScriptDefinition = object : KotlinScriptDefinition(template), DependenciesResolver {
-
-    override val dependencyResolver = this
-
-    override fun resolve(
-        scriptContents: ScriptContents,
-        environment: Environment
-    ): DependenciesResolver.ResolveResult = DependenciesResolver.ResolveResult.Success(
-        ScriptDependencies(imports = implicitImports),
-        emptyList()
-    )
-}
+fun scriptDefinitionFromTemplate(template: KClass<out Any>, implicitImports: List<String>): ScriptDefinition =
+    // TODO ScriptCompilationConfigurationKeys.defaultImports ???
+    ScriptDefinition.FromLegacyTemplate(defaultJvmScriptingHostConfiguration, template)
 
 
 internal

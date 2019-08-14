@@ -16,9 +16,20 @@
 
 import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
 
-plugins {
-    id("kotlin2js") version "$kotlinVersion"
+buildscript {
+    repositories {
+        gradlePluginPortal()
+        maven {
+            name = "kotlin-eap"
+            url = uri("https://dl.bintray.com/kotlin/kotlin-eap")
+        }
+    }
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+    }
 }
+
+apply(plugin = "kotlin2js")
 
 dependencies {
     compile(kotlin("stdlib-js"))
@@ -26,6 +37,10 @@ dependencies {
 
 repositories {
     jcenter()
+    maven {
+        name = "kotlin-eap"
+        url = uri("https://dl.bintray.com/kotlin/kotlin-eap")
+    }
 }
 
 tasks {
