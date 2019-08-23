@@ -23,6 +23,7 @@ import org.gradle.util.DeprecationLogger;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Enumeration;
 
 public class DefaultDeprecatedClassLoader extends ClassLoader implements DeprecatedClassloader {
@@ -63,9 +64,21 @@ public class DefaultDeprecatedClassLoader extends ClassLoader implements Depreca
 
     @Override
     public Enumeration<URL> getResources(String name) throws IOException {
-        System.out.println("deprecated Resources are " + deprecatedUsageLoader.getResources(name).hasMoreElements() + " for " + name);
-        System.out.println("non Resources are " + nonDeprecatedParent.getResources(name).hasMoreElements() + " for " + name);
-        return nonDeprecatedParent.getResources(name);
+        Enumeration<URL> resources;
+        if (!deprecationFired) {
+            resources = nonDeprecatedParent.getResources(name);
+            if (resources.hasMoreElements()) {
+                return resources;
+            }
+        }
+
+        resources = deprecatedUsageLoader.getResources(name);
+        if (resources.hasMoreElements()) {
+            maybeEmitDeprecationWarning();
+            return resources;
+        } else {
+            return Collections.emptyEnumeration();
+        }
     }
 
     @Override
