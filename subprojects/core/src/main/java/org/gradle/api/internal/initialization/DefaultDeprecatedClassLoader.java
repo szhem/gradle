@@ -63,20 +63,7 @@ public class DefaultDeprecatedClassLoader extends ClassLoader implements Depreca
 
     @Override
     public Enumeration<URL> getResources(String name) throws IOException {
-        Enumeration<URL> resources;
-        if (!deprecationFired) {
-            resources = nonDeprecatedParent.getResources(name);
-            if (resources.hasMoreElements()) {
-                return resources;
-            }
-        }
-
-        resources = deprecatedUsageLoader.getResources(name);
-        if (resources.hasMoreElements()) {
-            maybeEmitDeprecationWarning();
-        }
-
-        return resources;
+        return nonDeprecatedParent.getResources(name);
     }
 
     @Override
