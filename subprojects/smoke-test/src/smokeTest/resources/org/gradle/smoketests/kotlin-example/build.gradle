@@ -3,10 +3,6 @@ buildscript {
 
     repositories {
         mavenCentral()
-        maven {
-            name = "kotlin-eap"
-            url = uri("https://dl.bintray.com/kotlin/kotlin-eap")
-        }
     }
 
     dependencies {
@@ -21,10 +17,6 @@ mainClassName = "pkg.MainKt"
 
 repositories {
     mavenCentral()
-    maven {
-        name = "kotlin-eap"
-        url = uri("https://dl.bintray.com/kotlin/kotlin-eap")
-    }
 }
 
 dependencies {

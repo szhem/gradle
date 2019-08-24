@@ -79,13 +79,10 @@ import java.io.File
 
 import kotlin.reflect.KClass
 
-import kotlin.script.dependencies.Environment
-import kotlin.script.dependencies.ScriptContents
-import kotlin.script.experimental.dependencies.DependenciesResolver
-import kotlin.script.experimental.dependencies.ScriptDependencies
-import kotlin.script.experimental.host.ScriptingHostConfiguration
-import kotlin.script.experimental.host.getScriptingClass
-import kotlin.script.experimental.jvm.JvmGetScriptingClass
+import kotlin.script.experimental.api.ScriptCompilationConfiguration
+import kotlin.script.experimental.api.baseClass
+import kotlin.script.experimental.api.defaultImports
+import kotlin.script.experimental.api.hostConfiguration
 import kotlin.script.experimental.jvm.defaultJvmScriptingHostConfiguration
 
 
@@ -678,9 +675,21 @@ class ResidualProgramCompiler(
 }
 
 
-fun scriptDefinitionFromTemplate(template: KClass<out Any>, implicitImports: List<String>): ScriptDefinition =
-    // TODO ScriptCompilationConfigurationKeys.defaultImports ???
-    ScriptDefinition.FromLegacyTemplate(defaultJvmScriptingHostConfiguration, template)
+fun scriptDefinitionFromTemplate(
+    template: KClass<out Any>,
+    implicitImports: List<String>
+): ScriptDefinition {
+    val hostConfiguration = defaultJvmScriptingHostConfiguration
+    return ScriptDefinition.FromConfigurations(
+        hostConfiguration = hostConfiguration,
+        compilationConfiguration = ScriptCompilationConfiguration {
+            baseClass(template)
+            defaultImports(implicitImports)
+            hostConfiguration(hostConfiguration)
+        },
+        evaluationConfiguration = null
+    )
+}
 
 
 internal
